@@ -21,7 +21,7 @@ export default function UserLayout({
   ];
 
   return (
-    <div className="flex min-h-screen text-white overflow-hidden">
+    <div className="bg-[#0B0F1A] min-h-screen text-white overflow-hidden relative font-sans">
       {/* Premium Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-20 w-72 hidden flex-col border-r border-white/10 bg-[#0B0F1A]/80 backdrop-blur-2xl sm:flex">
         <div className="flex h-20 items-center border-b border-white/10 px-8">

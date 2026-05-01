@@ -2,35 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
-    --radius: 1rem;
-  }
-}
-
-@layer base {
-  body {
-    @apply bg-[#0B0F1A] text-white antialiased;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0, transparent 50%), 
-      radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.1) 0, transparent 50%);
-    background-attachment: fixed;
-    min-height: 100vh;
-  }
-}
-
-@layer components {
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-2xl border border-white/5 rounded-[2rem] shadow-2xl;
-  }
-  
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 font-black;
-  }
+body {
+  background-color: #0B0F1A;
+  color: white;
 }

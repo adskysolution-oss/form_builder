@@ -50,7 +50,7 @@ export default function UserDashboard() {
            <p className="text-slate-400 font-medium tracking-wide">Here is your platform performance for today.</p>
         </div>
         <div className="flex gap-3">
-           <div className="glass-card px-6 py-3 rounded-2xl flex items-center gap-3 border-blue-500/20">
+            <div className="bg-white/5 backdrop-blur-xl border border-white/5 px-6 py-3 rounded-2xl flex items-center gap-3 border-blue-500/20">
               <Activity className="h-5 w-5 text-blue-400" />
               <span className="text-sm font-bold text-white tracking-wide uppercase">Live Status: Active</span>
            </div>
@@ -60,7 +60,7 @@ export default function UserDashboard() {
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <Card key={stat.title} className="glass-card border-white/5 hover:border-blue-500/30 transition-all duration-500 group overflow-hidden">
+          <Card key={stat.title} className="bg-white/5 backdrop-blur-xl border border-white/5 rounded-3xl border-white/5 hover:border-blue-500/30 transition-all duration-500 group overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 rounded-2xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform`}>
@@ -85,7 +85,7 @@ export default function UserDashboard() {
       {/* Main Analytics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Chart Card */}
-        <Card className="lg:col-span-2 glass-card border-white/5 p-8 relative overflow-hidden">
+        <Card className="lg:col-span-2 bg-white/5 backdrop-blur-xl border border-white/5 rounded-3xl border-white/5 p-8 relative overflow-hidden">
            <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-xl font-black text-white">Lead Inflow</h3>
@@ -119,7 +119,7 @@ export default function UserDashboard() {
 
         {/* Activity Feed / Promo Card */}
         <div className="space-y-6">
-           <Card className="glass-card border-blue-500/20 bg-gradient-to-br from-blue-600/20 to-purple-600/20 p-8 relative overflow-hidden group">
+           <Card className="bg-white/5 backdrop-blur-xl border border-white/5 rounded-3xl border-blue-500/20 bg-gradient-to-br from-blue-600/20 to-purple-600/20 p-8 relative overflow-hidden group">
               <div className="relative z-10">
                 <div className="bg-white p-3 rounded-2xl w-fit mb-6">
                    <Zap className="h-6 w-6 text-blue-600 fill-blue-600" />
@@ -133,7 +133,7 @@ export default function UserDashboard() {
               <div className="absolute top-[-20%] right-[-20%] w-64 h-64 bg-blue-500/20 blur-[100px] rounded-full group-hover:bg-blue-500/30 transition-colors" />
            </Card>
 
-           <div className="glass-card p-6 border-white/5 space-y-4">
+           <div className="bg-white/5 backdrop-blur-xl border border-white/5 rounded-3xl p-6 border-white/5 space-y-4">
               <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest">Global Insights</h4>
               <div className="flex items-center gap-4 group cursor-pointer">
                  <div className="bg-white/5 p-3 rounded-xl text-slate-400 group-hover:text-blue-400 group-hover:bg-blue-400/10 transition-all">
