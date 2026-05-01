@@ -3,6 +3,8 @@ import { Plan } from "@/models/Plan";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default async function PricingPage() {
   await connectDB();
@@ -62,15 +64,17 @@ export default async function PricingPage() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button 
-                className="w-full" 
-                variant={plan.name === 'Pro' ? 'default' : 'outline'}
-                asChild
+              <Link
+                href={plan.price === 0 ? "/register" : `/checkout/${plan._id}`}
+                className={cn(
+                  "w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2",
+                  plan.name === 'Pro' 
+                    ? "bg-primary text-primary-foreground shadow hover:bg-primary/90" 
+                    : "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+                )}
               >
-                <a href={plan.price === 0 ? "/register" : `/checkout/${plan._id}`}>
-                  {plan.price === 0 ? 'Get Started for Free' : 'Subscribe Now'}
-                </a>
-              </Button>
+                {plan.price === 0 ? 'Get Started for Free' : 'Subscribe Now'}
+              </Link>
             </CardFooter>
           </Card>
         ))}

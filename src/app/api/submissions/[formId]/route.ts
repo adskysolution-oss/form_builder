@@ -3,8 +3,9 @@ import connectDB from '@/lib/db';
 import { Form } from '@/models/Form';
 import { Lead } from '@/models/Lead';
 
-export async function POST(req: Request, { params }: { params: { formId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ formId: string }> }) {
   try {
+    const { formId } = await params;
     const { data } = await req.json();
     
     if (!data) {
@@ -13,7 +14,7 @@ export async function POST(req: Request, { params }: { params: { formId: string 
 
     await connectDB();
 
-    const form = await Form.findById(params.formId);
+    const form = await Form.findById(formId);
     if (!form) {
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
