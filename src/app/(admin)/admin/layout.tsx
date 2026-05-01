@@ -14,20 +14,14 @@ export default function AdminLayout({
           <span className="font-bold">SmartForm Admin</span>
         </div>
         <nav className="grid items-start px-2 text-sm font-medium lg:px-4 mt-4 gap-2">
-          <a href="/admin" className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary">
+          <a href="/admin" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
             <LayoutDashboard className="h-4 w-4" /> Dashboard
           </a>
           <a href="/admin/users" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-            <Users className="h-4 w-4" /> Users
+            <Users className="h-4 w-4" /> User Management
           </a>
-          <a href="/admin/forms" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-            <FormInput className="h-4 w-4" /> Forms & Leads
-          </a>
-          <a href="/admin/revenue" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-            <Activity className="h-4 w-4" /> Revenue
-          </a>
-          <a href="/admin/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-            <Settings className="h-4 w-4" /> Settings
+          <a href="/admin/settings/gateways" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+            <Settings className="h-4 w-4" /> Platform Gateways
           </a>
         </nav>
         <div className="mt-auto p-4">

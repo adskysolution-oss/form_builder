@@ -14,20 +14,17 @@ export default function UserLayout({
           <span className="font-bold text-primary">SmartForm</span>
         </div>
         <nav className="grid items-start px-2 text-sm font-medium lg:px-4 mt-4 gap-2">
-          <a href="/dashboard" className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary">
+          <a href="/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
             <LayoutDashboard className="h-4 w-4" /> Dashboard
           </a>
-          <a href="/dashboard/forms" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+          <a href="/dashboard/forms/builder" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
             <FileText className="h-4 w-4" /> My Forms
           </a>
           <a href="/dashboard/leads" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
             <Users className="h-4 w-4" /> Leads CRM
           </a>
-          <a href="/dashboard/earnings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-            <DollarSign className="h-4 w-4" /> Earnings
-          </a>
-          <a href="/dashboard/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-            <Settings className="h-4 w-4" /> Settings
+          <a href="/dashboard/settings/gateways" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+            <Settings className="h-4 w-4" /> Gateways
           </a>
         </nav>
         <div className="mt-auto p-4">
