@@ -2,263 +2,249 @@
 
 import { useState } from "react";
 import { 
+  Plus, 
+  Trash2, 
+  GripVertical, 
+  Save, 
+  Eye, 
+  Settings2, 
+  Type, 
+  AtSign, 
+  Phone, 
+  CreditCard, 
+  ListTodo,
+  Sparkles,
+  ChevronRight,
+  Layers,
+  Palette
+} from "lucide-react";
+import { 
   DndContext, 
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent
+  closestCenter, 
+  KeyboardSensor, 
+  PointerSensor, 
+  useSensor, 
+  useSensors 
 } from "@dnd-kit/core";
 import { 
   arrayMove, 
   SortableContext, 
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  useSortable
+  sortableKeyboardCoordinates, 
+  verticalListSortingStrategy, 
+  useSortable 
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { GripVertical, Type, Mail, Phone, ChevronDown, CheckSquare, FileUp, CreditCard, Trash2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-export type FieldType = 'TEXT' | 'EMAIL' | 'PHONE' | 'DROPDOWN' | 'CHECKBOX' | 'FILE' | 'PAYMENT';
-
-export interface FormFieldData {
-  id: string;
-  type: FieldType;
-  label: string;
-  required: boolean;
-  placeholder?: string;
-}
-
-const FIELD_TYPES: { type: FieldType; icon: React.ElementType; label: string }[] = [
-  { type: 'TEXT', icon: Type, label: 'Short Text' },
-  { type: 'EMAIL', icon: Mail, label: 'Email' },
-  { type: 'PHONE', icon: Phone, label: 'Phone' },
-  { type: 'DROPDOWN', icon: ChevronDown, label: 'Dropdown' },
-  { type: 'CHECKBOX', icon: CheckSquare, label: 'Checkbox' },
-  { type: 'FILE', icon: FileUp, label: 'File Upload' },
-  { type: 'PAYMENT', icon: CreditCard, label: 'Payment Button' },
-];
-
-function SortableFieldItem({ 
-  field, 
-  onRemove, 
-  onChange 
-}: { 
-  field: FormFieldData; 
-  onRemove: (id: string) => void;
-  onChange: (id: string, updates: Partial<FormFieldData>) => void;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: field.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+// --- Draggable Field Component ---
+function SortableField({ field, onRemove, onLabelChange }: any) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: field.id });
+  const style = { transform: CSS.Transform.toString(transform), transition };
 
   return (
-    <div ref={setNodeRef} style={style} className="bg-background border rounded-lg p-4 mb-4 shadow-sm flex gap-4 group">
-      <div 
-        {...attributes} 
-        {...listeners}
-        className="mt-2 cursor-grab text-muted-foreground hover:text-foreground"
-      >
-        <GripVertical className="h-5 w-5" />
-      </div>
-      
-      <div className="flex-1 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold px-2 py-1 bg-muted rounded">{field.type}</span>
-          </div>
-          <Button variant="ghost" size="icon" onClick={() => onRemove(field.id)} className="text-destructive h-8 w-8">
-            <Trash2 className="h-4 w-4" />
-          </Button>
+    <Card ref={setNodeRef} style={style} className="group relative bg-white border-slate-200 p-5 mb-4 hover:border-blue-400 hover:shadow-md transition-all">
+      <div className="flex items-center gap-4">
+        <div {...attributes} {...listeners} className="cursor-grab text-slate-300 hover:text-slate-500">
+          <GripVertical className="h-5 w-5" />
         </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label>Field Label</Label>
-            <Input 
-              value={field.label} 
-              onChange={(e) => onChange(field.id, { label: e.target.value })} 
-              placeholder="Question text..." 
-            />
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-blue-500">{field.type}</span>
+            <Button variant="ghost" size="icon" onClick={() => onRemove(field.id)} className="h-7 w-7 text-slate-300 hover:text-destructive hover:bg-destructive/5 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="space-y-2">
-            <Label>Placeholder Text</Label>
-            <Input 
-              value={field.placeholder || ''} 
-              onChange={(e) => onChange(field.id, { placeholder: e.target.value })} 
-              placeholder="Optional placeholder..." 
-              disabled={['FILE', 'PAYMENT', 'CHECKBOX'].includes(field.type)}
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-2 pt-2 border-t mt-4">
-          <Switch 
-            id={`req-${field.id}`} 
-            checked={field.required}
-            onCheckedChange={(c) => onChange(field.id, { required: c })}
+          <Input 
+            value={field.label} 
+            onChange={(e) => onLabelChange(field.id, e.target.value)}
+            className="border-none p-0 text-base font-medium focus-visible:ring-0 placeholder:text-slate-400"
+            placeholder="Question Label..."
           />
-          <Label htmlFor={`req-${field.id}`} className="text-sm">Required Field</Label>
+          <div className="h-10 w-full bg-slate-50 rounded border border-dashed border-slate-200 flex items-center px-3 italic text-sm text-slate-400">
+            User response will appear here...
+          </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
-export default function FormBuilder() {
-  const [fields, setFields] = useState<FormFieldData[]>([]);
-  const [formTitle, setFormTitle] = useState("Untitled Form");
-  
+// --- Main Builder UI ---
+export default function ProFormBuilder() {
+  const [fields, setFields] = useState<any[]>([]);
+  const [title, setTitle] = useState("Untitled High-Conversion Form");
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
+
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const addField = (type: string) => {
+    const newField = { 
+      id: Math.random().toString(36).substr(2, 9), 
+      type, 
+      label: `New ${type.charAt(0).toUpperCase() + type.slice(1)} Field`,
+      required: false 
+    };
+    setFields([...fields, newField]);
+    toast.info(`${type.toUpperCase()} field added`);
+  };
+
+  const removeField = (id: string) => setFields(fields.filter(f => f.id !== id));
+
+  const onLabelChange = (id: string, label: string) => {
+    setFields(fields.map(f => f.id === id ? { ...f, label } : f));
+  };
+
+  const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    
-    if (over && active.id !== over.id) {
+    if (active.id !== over.id) {
       setFields((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over.id);
         return arrayMove(items, oldIndex, newIndex);
       });
     }
   };
 
-  const addField = (type: FieldType) => {
-    const newField: FormFieldData = {
-      id: `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      type,
-      label: `New ${type.toLowerCase()} field`,
-      required: false,
-    };
-    setFields([...fields, newField]);
-  };
-
-  const updateField = (id: string, updates: Partial<FormFieldData>) => {
-    setFields(fields.map(f => f.id === id ? { ...f, ...updates } : f));
-  };
-
-  const removeField = (id: string) => {
-    setFields(fields.filter(f => f.id !== id));
-  };
-
-  const handleSaveForm = async () => {
+  const saveForm = async () => {
+    if (fields.length === 0) return toast.error("Add at least one field!");
+    setIsSaving(true);
     try {
       const res = await fetch("/api/forms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formTitle,
-          fields: fields,
-          settings: {
-            themeColor: "#3b82f6",
-            submitText: "Submit",
-            successMessage: "Thank you! Your response has been recorded.",
-            isPublished: true
-          }
-        })
+        body: JSON.stringify({ title, fields }),
       });
-
       if (res.ok) {
-        const data = await res.json();
-        alert(`Form saved successfully! Public URL: /form/${data.form.slug}`);
-      } else {
-        const data = await res.json();
-        alert(`Failed to save form: ${data.error}`);
+        toast.success("Form Published Successfully! 🚀");
+        router.push("/dashboard/forms");
       }
     } catch (err) {
-      alert("An error occurred while saving the form.");
+      toast.error("Failed to publish form");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
-    <div className="grid md:grid-cols-[300px_1fr] gap-8">
+    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden">
       {/* Sidebar Tools */}
-      <div className="space-y-6">
-        <Card>
-          <CardContent className="p-4 space-y-4">
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground">Form Details</h3>
-            <div className="space-y-2">
-              <Label>Form Title</Label>
-              <Input value={formTitle} onChange={(e) => setFormTitle(e.target.value)} />
-            </div>
-            
-            <h3 className="font-semibold mt-6 mb-4 text-sm uppercase tracking-wider text-muted-foreground">Add Fields</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-1 gap-2">
-              {FIELD_TYPES.map((ft) => {
-                const Icon = ft.icon;
-                return (
-                  <Button 
-                    key={ft.type} 
-                    variant="outline" 
-                    className="justify-start w-full gap-3"
-                    onClick={() => addField(ft.type)}
-                  >
-                    <Icon className="h-4 w-4 text-muted-foreground" />
-                    {ft.label}
-                  </Button>
-                );
-              })}
-            </div>
-
-            <div className="pt-6 border-t mt-6">
-              <Button className="w-full" onClick={handleSaveForm}>Save Form</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Canvas */}
-      <div className="bg-muted/30 rounded-xl p-4 min-h-[600px] border border-dashed border-border/60">
-        {fields.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-60">
-            <Type className="h-12 w-12 mb-4" />
-            <p>Your form is empty.</p>
-            <p className="text-sm">Click a field type on the left to get started.</p>
+      <aside className="w-80 border-r bg-white flex flex-col p-6 shadow-sm z-20">
+        <div className="flex items-center gap-2 mb-8">
+          <div className="bg-blue-600 p-1.5 rounded-lg">
+            <Sparkles className="h-5 w-5 text-white" />
           </div>
-        ) : (
-          <DndContext 
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext 
-              items={fields.map(f => f.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-4 max-w-2xl mx-auto">
-                {fields.map((field) => (
-                  <SortableFieldItem 
+          <span className="font-bold text-xl tracking-tight">Design Studio</span>
+        </div>
+
+        <Tabs defaultValue="fields" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="fields"><Layers className="h-4 w-4 mr-2" /> Elements</TabsTrigger>
+            <TabsTrigger value="style"><Palette className="h-4 w-4 mr-2" /> Theme</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="fields" className="space-y-6">
+            <div className="space-y-3">
+              <Label className="text-xs uppercase font-bold text-slate-400 tracking-wider">Basic Inputs</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" size="sm" onClick={() => addField('text')} className="justify-start border-slate-100 hover:border-blue-200">
+                  <Type className="h-4 w-4 mr-2 text-blue-500" /> Text
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => addField('email')} className="justify-start border-slate-100 hover:border-blue-200">
+                  <AtSign className="h-4 w-4 mr-2 text-purple-500" /> Email
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => addField('number')} className="justify-start border-slate-100 hover:border-blue-200">
+                  <Phone className="h-4 w-4 mr-2 text-green-500" /> Phone
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => addField('payment')} className="justify-start border-slate-100 hover:border-blue-200">
+                  <CreditCard className="h-4 w-4 mr-2 text-amber-500" /> Payment
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-xs uppercase font-bold text-slate-400 tracking-wider">Conversion Boosters</Label>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-between group border-slate-100 hover:border-blue-200">
+                  <div className="flex items-center"><ListTodo className="h-4 w-4 mr-2 text-blue-500" /> Multiple Choice</div>
+                  <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-blue-500 transition-colors" />
+                </Button>
+                <Button variant="outline" className="w-full justify-between group border-slate-100 hover:border-blue-200">
+                  <div className="flex items-center"><Plus className="h-4 w-4 mr-2 text-blue-500" /> Dynamic File Upload</div>
+                  <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-blue-500 transition-colors" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="style" className="p-4 text-center py-12 border-2 border-dashed rounded-xl">
+             <Settings2 className="h-8 w-8 mx-auto text-slate-300 mb-2" />
+             <p className="text-sm text-slate-400 font-medium">Theme engine is coming soon in 10x update.</p>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-auto pt-6 border-t">
+          <Button onClick={saveForm} disabled={isSaving} className="w-full bg-blue-600 hover:bg-blue-700 h-11 text-white shadow-lg shadow-blue-500/20">
+            {isSaving ? "Publishing..." : "Launch Form 🚀"}
+          </Button>
+        </div>
+      </aside>
+
+      {/* Builder Canvas */}
+      <main className="flex-1 overflow-y-auto p-12">
+        <div className="max-w-2xl mx-auto space-y-8">
+          <div className="space-y-4 text-center mb-12">
+            <Input 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-4xl font-extrabold text-slate-900 border-none bg-transparent p-0 text-center focus-visible:ring-0 h-auto"
+              placeholder="Give your form a killer title..."
+            />
+            <p className="text-slate-400 font-medium tracking-wide">Drag and drop elements to build your storyboard.</p>
+          </div>
+
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={fields.map(f => f.id)} strategy={verticalListSortingStrategy}>
+              {fields.length === 0 ? (
+                <div className="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-24 text-center">
+                  <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Plus className="h-8 w-8 text-blue-500" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800">Your canvas is empty</h3>
+                  <p className="text-slate-400 max-w-xs mx-auto mt-2">Click elements from the sidebar to start building your high-conversion form.</p>
+                </div>
+              ) : (
+                fields.map((field) => (
+                  <SortableField 
                     key={field.id} 
                     field={field} 
-                    onRemove={removeField}
-                    onChange={updateField}
+                    onRemove={removeField} 
+                    onLabelChange={onLabelChange} 
                   />
-                ))}
-              </div>
+                ))
+              )}
             </SortableContext>
           </DndContext>
-        )}
-      </div>
+        </div>
+      </main>
+
+      {/* Right Preview Toggle */}
+      <aside className="w-20 border-l bg-white flex flex-col items-center py-6 gap-6 shadow-sm z-20">
+        <Button variant="ghost" size="icon" className="rounded-xl hover:bg-blue-50 hover:text-blue-600">
+          <Eye className="h-6 w-6" />
+        </Button>
+        <Button variant="ghost" size="icon" className="rounded-xl hover:bg-blue-50 hover:text-blue-600">
+          <Settings2 className="h-6 w-6" />
+        </Button>
+      </aside>
     </div>
   );
 }
