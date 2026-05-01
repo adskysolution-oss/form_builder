@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import PublicFormRenderer from "@/components/PublicFormRenderer";
 
 export default async function PublicFormPage({ params }: { params: { slug: string } }) {
   await connectDB();
@@ -26,46 +27,7 @@ export default async function PublicFormPage({ params }: { params: { slug: strin
           </CardHeader>
         </Card>
         
-        {/* We would typically use a client component wrapper here to handle form submission state */}
-        <form className="space-y-6">
-          {form.fields.map((field: any) => (
-            <Card key={field.id} className="shadow-sm">
-              <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <Label className="text-base font-semibold">
-                    {field.label}
-                    {field.required && <span className="text-red-500 ml-1">*</span>}
-                  </Label>
-                  
-                  {field.type === 'TEXT' && (
-                    <Input placeholder={field.placeholder || "Your answer"} required={field.required} />
-                  )}
-                  {field.type === 'EMAIL' && (
-                    <Input type="email" placeholder={field.placeholder || "Your email"} required={field.required} />
-                  )}
-                  {field.type === 'PHONE' && (
-                    <Input type="tel" placeholder={field.placeholder || "Your phone number"} required={field.required} />
-                  )}
-                  {/* Basic fallback for complex fields for now */}
-                  {['DROPDOWN', 'CHECKBOX', 'FILE', 'PAYMENT'].includes(field.type) && (
-                    <div className="text-sm text-muted-foreground italic border border-dashed p-4 rounded bg-muted/20">
-                      [{field.type}] field rendering placeholder
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-          
-          <div className="flex justify-between items-center pt-4">
-            <Button size="lg" type="submit" style={{ backgroundColor: form.settings.themeColor || '#3b82f6' }}>
-              {form.settings.submitText || "Submit"}
-            </Button>
-            <div className="text-xs text-muted-foreground">
-              Powered by <span className="font-bold">SmartForm</span>
-            </div>
-          </div>
-        </form>
+        <PublicFormRenderer form={JSON.parse(JSON.stringify(form))} />
       </div>
     </div>
   );
